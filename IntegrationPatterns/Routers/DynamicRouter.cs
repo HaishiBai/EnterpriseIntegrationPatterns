@@ -8,11 +8,9 @@ using IntegrationPatterns.Interfaces;
 namespace IntegrationPatterns.Routers
 {
     public class DynamicRouter: MessageRouter
-    {
-        public ChannelCollection<IChannel> ControlChannels { get; set; }
+    {        
         public DynamicRouter()
         {
-            ControlChannels = new ChannelCollection<IChannel>(1);
             InputChannels.MessageReceivedOnChannel += InputChannels_MessageReceivedOnChannel;
         }
         void InputChannels_MessageReceivedOnChannel(object sender, ChannelMessageEventArgs e)

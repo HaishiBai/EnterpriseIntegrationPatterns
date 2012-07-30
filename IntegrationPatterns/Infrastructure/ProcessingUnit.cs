@@ -10,10 +10,12 @@ namespace IntegrationPatterns.Infrastructure
     {
         public ChannelCollection<IChannel> InputChannels { get; set; }
         public ChannelCollection<IChannel> OutputChannels { get; set; }
+        public ChannelCollection<IChannel> ControlChannels { get; set; }
         public ProcessingUnit()
         {
             InputChannels = new ChannelCollection<IChannel>(1);
             OutputChannels = new ChannelCollection<IChannel>(Multiplicity.Many);
+            ControlChannels = new ChannelCollection<IChannel>(1);
         }
     }
 }
