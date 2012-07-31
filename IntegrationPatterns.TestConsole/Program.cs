@@ -9,6 +9,7 @@ using IntegrationPatterns.Infrastructure;
 using IntegrationPatterns.Infrastructure.Configuraiton;
 using IntegrationPatterns.Interfaces;
 using IntegrationPatterns.Routers;
+using IntegrationPatterns.Samples.Routers;
 using IntegrationPatterns.ServiceBus;
 
 namespace IntegrationPatterns.TestConsole
@@ -20,6 +21,8 @@ namespace IntegrationPatterns.TestConsole
 
             cbanner(ConsoleColor.Cyan, "Enterprise Integration Patterns Test Console v1.0");
 
+            ContentBasedRouter();
+
             DynamicRouter();
 
             cprintln(ConsoleColor.White, "Press [Enter] to exit", true);
@@ -28,14 +31,14 @@ namespace IntegrationPatterns.TestConsole
 
         static void DynamicRouter()
         {
-            //Scenario 1: A greedy dynamic router that routs jobs to different processors based on
+            //Scenario 1: A greedy dynamic router that routes jobs to different processors based on
             //            the pressure feedbacks it receives from the control channel. It will pick
             //            the processor that is least pressured. The pressure by default is the
             //            number of jobs in processing queue, but it can be overridden by custom
             //            logics.
 
             int nodeNumber = 2;
-            int taskNumber = 100;
+            int taskNumber = 10;
             double[] processingTime = new double[nodeNumber];
 
             List<SBMessage> tasks = generateTasks(taskNumber);
@@ -56,7 +59,7 @@ namespace IntegrationPatterns.TestConsole
                 Thread.Sleep((int)((double)task.Headers[HeaderName.PressureValue] * 1000)); //simulate processing time
                 int id = pipeline.OutputChannels.IndexOf(e.Channel);
                 processingTime[id] += (double)task.Headers[HeaderName.PressureValue];
-                processedTasks++;
+                Interlocked.Increment(ref processedTasks);
                 Trace.TraceInformation(string.Format("Processed [{0}]", task.Body));
 
                 Message msg = new Message("");  //provide feedback to report reduced pressure on the channel
@@ -73,11 +76,44 @@ namespace IntegrationPatterns.TestConsole
 
             while (processedTasks < taskNumber)
                 Thread.Sleep(1000);
-
+            host.Close();
             cprintln(ConsoleColor.Yellow, "Total workload: " + totalSize);
             cprintln(ConsoleColor.Yellow, "  Ideal processing time      : " + totalSize / nodeNumber);
             cprintln(ConsoleColor.Yellow, "  Round-robin processing time: " + getRoundRobinProcessingTime(tasks, nodeNumber));
             cprintln(ConsoleColor.Yellow, "  Greedy load-balancing processing time: " + maxItem(processingTime));
+        }
+        static void ContentBasedRouter()
+        {
+            //Scenario 2: A content-based router that routes  messages with "ProductType" header equals to "Cars"
+            //            to channel 0 and other messages to channel 2.
+            int taskNumber = 10;
+           
+            List<SBMessage> tasks = generateTasks(taskNumber);
+           
+            var host = ProcessingUnitHost.FromConfiguration((MessagePipelineSection)ConfigurationManager.GetSection("Scenario2"));
+            host.Open();
+
+            var pipeline = host.GetProcessingUnit("contentbasedrouter");
+            
+            int processedTasks = 0;
+            pipeline.OutputChannels.MessageReceivedOnChannel += new EventHandler<ChannelMessageEventArgs>((obj, e) =>
+            {
+                if ((string)e.Message.Headers["ProductType"] == "Cars")
+                    cprintln(ConsoleColor.Red, e.Channel.Name + " processing " + (string)e.Message.Headers["ProductType"]);
+                else
+                    cprintln(ConsoleColor.Green, e.Channel.Name + " processing " + (string)e.Message.Headers["ProductType"]);
+                Interlocked.Increment(ref processedTasks);
+            });
+
+            foreach (var task in tasks)
+            {
+                pipeline.InputChannels[0].Send(task);
+                Thread.Sleep(rand.Next(100, 1000));
+            }
+
+            while (processedTasks < taskNumber)
+                Thread.Sleep(1000);
+            host.Close();
         }
 
         static Random rand = new Random();
@@ -90,7 +126,8 @@ namespace IntegrationPatterns.TestConsole
             for (int i = 1; i <= taskNumber; i++)
             {
                 SBMessage msg = new SBMessage("Test task " + i);
-                msg.Headers.Add(HeaderName.PressureValue, rand.Next(1000, 5000) / 1000.0);
+                msg.Headers.Add(HeaderName.PressureValue, rand.Next(1000, 10000) / 1000.0);
+                msg.Headers.Add("ProductType", rand.Next(0, 2) == 0 ? "Cars" : "Trucks");
                 tasks.Add(msg);
             }
 
@@ -128,7 +165,6 @@ namespace IntegrationPatterns.TestConsole
             return max;
         }
         #endregion
-
         #region Console output helpers
         static void println(string text, bool center = false)
         {

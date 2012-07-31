@@ -11,6 +11,7 @@ namespace IntegrationPatterns.Interfaces
         event EventHandler<ChannelMessageEventArgs> MessageReceived;
         string Name { get;}
         void Open();
+        void Close();
         void Send(IMessage value);
     }
 }

@@ -71,6 +71,11 @@ namespace IntegrationPatterns.Infrastructure
             foreach (var channel in mChannels)
                 channel.Open();
         }
+        public void Close()
+        {
+            foreach (var channel in mChannels)
+                channel.Close();
+        }
         void channel_MessageReceived(object sender, ChannelMessageEventArgs e)
         {
             if (MessageReceivedOnChannel != null)

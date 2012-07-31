@@ -32,6 +32,16 @@ namespace IntegrationPatterns.Infrastructure
                     ((DynamicRouter)unit).ControlChannels.Open();
             }
         }
+        public void Close()
+        {
+            foreach (var unit in mProcessingUnits.Values)
+            {
+                unit.InputChannels.Close();
+                unit.OutputChannels.Close();
+                if (unit is DynamicRouter)
+                    ((DynamicRouter)unit).ControlChannels.Close();
+            }
+        }
         public static ProcessingUnitHost FromConfiguration(MessagePipelineSection configuration)
         {
             ProcessingUnitHost host = new ProcessingUnitHost();

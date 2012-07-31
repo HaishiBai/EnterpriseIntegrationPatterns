@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0EA864BB-D051-4841-A6DD-37F6548BCC16}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{71A64FD5-718B-467B-B8D8-D134700F1F5F}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IntegrationPatterns.TestConsole</RootNamespace>
-    <AssemblyName>IntegrationPatterns.TestConsole</AssemblyName>
+    <RootNamespace>IntegrationPatterns.Samples</RootNamespace>
+    <AssemblyName>IntegrationPatterns.Samples</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,7 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,8 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorConsoleTraceListener.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="GreedyDynamicRouter.cs" />
+    <Compile Include="HeaderBasedRouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -51,21 +48,10 @@
       <Project>{07c30ae0-94eb-4bf9-81df-3bccbe960f78}</Project>
       <Name>IntegrationPatterns.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\IntegrationPatterns.Samples\IntegrationPatterns.Samples.csproj">
-      <Project>{71a64fd5-718b-467b-b8d8-d134700f1f5f}</Project>
-      <Name>IntegrationPatterns.Samples</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\IntegrationPatterns.ServiceBus\IntegrationPatterns.ServiceBus.csproj">
-      <Project>{dc443172-56ce-4eb8-8cb8-47c3c7c66f8b}</Project>
-      <Name>IntegrationPatterns.ServiceBus</Name>
-    </ProjectReference>
     <ProjectReference Include="..\IntegrationPatterns\IntegrationPatterns.csproj">
       <Project>{43f14df9-210c-4dde-8535-d0cecda7104e}</Project>
       <Name>IntegrationPatterns</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

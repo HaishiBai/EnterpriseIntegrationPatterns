@@ -37,6 +37,10 @@ namespace IntegrationPatterns.ServiceBus
                 namespaceManager.CreateQueue(name);
             myClient = QueueClient.CreateFromConnectionString(connectionString, name, ReceiveMode.PeekLock);
         }
+        public void Close()
+        {
+            myRunningState = false;
+        }
         public void Open()
         {
             myRunningState = true;
@@ -58,6 +62,7 @@ namespace IntegrationPatterns.ServiceBus
                         Trace.TraceError(exp.ToString());
                     }
                 }
+                myClient.Close();
             });
         }
         public void Send(IMessage value)

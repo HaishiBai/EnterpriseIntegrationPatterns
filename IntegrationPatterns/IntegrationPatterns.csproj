@@ -47,7 +47,6 @@
     <Compile Include="Infrastructure\ProcessingUnit.cs" />
     <Compile Include="Infrastructure\ProcessingUnitHost.cs" />
     <Compile Include="Routers\DynamicRouter.cs" />
-    <Compile Include="Routers\GreedyDynamicRouter.cs" />
     <Compile Include="Routers\MessageRouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

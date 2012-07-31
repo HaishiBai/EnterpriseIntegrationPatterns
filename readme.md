@@ -23,4 +23,5 @@ The following table summarizes the patterns supported by this library (as of 7/3
 
  **Pattern**|**Processing Unit**|**Input#**|**Output#**|**Control#**
  --------|--------|--------|--------|--------
+ Content-Based Router|IntegrationPatterns.Routers.DynamicRouter|1|n|1
  Dynamic Router|IntegrationPatterns.Routers.DynamicRouter|1|n|1

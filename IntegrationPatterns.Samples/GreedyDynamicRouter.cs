@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using IntegrationPatterns.Infrastructure;
+using IntegrationPatterns.Routers;
 
-namespace IntegrationPatterns.Routers
+namespace IntegrationPatterns.Samples.Routers
 {
     public class GreedyDynamicRouter: DynamicRouter
     {
